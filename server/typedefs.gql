@@ -1,0 +1,30 @@
+const typeDefs = `
+  type Query {
+    hello: String!
+    tweets: [Tweet]
+    username: String!
+  }
+
+  type Counter {
+    count: Int!
+    countStr: String
+  }
+
+  type Tweet {
+    id: Int!
+    message: String!
+    from: String!
+    time: String!
+  }
+
+  type Subscription {
+    counter: Counter!
+    tweet: Tweet
+  }
+
+  type Mutation {
+    sendTweet(from: String!, message: String!): Tweet
+  }
+`;
+
+module.exports = typeDefs;
