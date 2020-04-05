@@ -61,9 +61,13 @@ const options = {
   subscriptions: "/subscriptions",
   playground: "/",
 };
+if (process.env.NODE_ENV !== "production") {
+  server.express.use(morgan("dev"));
+} else {
+  server.express.use(morgan("combined"));
+  options.playground = false;
+}
 
-server.express.use(morgan("dev"));
-
-server.start(({ port }) =>
+server.start(options, ({ port }) =>
   console.log(`Server is running on localhost:${port}`)
 );

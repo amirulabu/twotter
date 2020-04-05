@@ -17,7 +17,7 @@ const AUTH_TOKEN = "apollo-token";
 
 // Http endpoint
 const httpEndpoint =
-  process.env.VUE_APP_GRAPHQL_HTTP || "http://localhost:4000";
+  process.env.VUE_APP_GRAPHQL_HTTP || "http://localhost:4000/graphql";
 
 const httpLink = new HttpLink({
   // You should use an absolute URL here
@@ -26,7 +26,7 @@ const httpLink = new HttpLink({
 
 // Create the subscription websocket link
 const wsLink = new WebSocketLink({
-  uri: "ws://localhost:4000",
+  uri: process.env.VUE_APP_GRAPHQL_WS || "ws://localhost:4000/subscriptions",
   options: {
     reconnect: true,
   },

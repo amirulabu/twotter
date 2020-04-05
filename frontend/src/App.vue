@@ -19,8 +19,15 @@
           id=""
           cols="30"
           rows="3"
-        ></textarea>
-        <button v-on:click.prevent="submit">Send</button>
+        >
+        </textarea>
+        <div class="button-area" v-if="loadingSubmit">
+          Submitting message, please wait...
+        </div>
+        <div class="button-area" v-else>
+          <span style="margin-right: 20px;">{{ message.length }}/140</span>
+          <button class="button-input" v-on:click.prevent="submit">Send</button>
+        </div>
       </div>
 
       <div v-for="tweet in tweetsSorted" :key="tweet.id">
@@ -53,6 +60,7 @@ export default {
       message: "",
       from: "",
       username: "",
+      loadingSubmit: false,
     };
   },
   computed: {
@@ -108,10 +116,17 @@ export default {
     },
     async submit() {
       try {
+        this.loadingSubmit = true;
         const from = this.from;
         const message = this.message;
+        if (this.message.length > 140) {
+          alert("Too long");
+          this.loadingSubmit = false;
+          return;
+        }
         if (this.from === "" || this.message === "") {
           alert("Please fill in all input");
+          this.loadingSubmit = false;
           return;
         }
         const data = await this.$apollo.mutate({
@@ -132,6 +147,7 @@ export default {
         });
         console.log(data);
         this.message = "";
+        this.loadingSubmit = false;
         // this.tweets.push(data.tweet);
       } catch (error) {
         console.log(error);
@@ -202,7 +218,15 @@ export default {
   border-radius: 20px;
 }
 
-.input button {
+.button-area {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 30px;
+}
+
+.button-input {
   background-color: #add8e6;
   color: rgb(0, 0, 0);
   font-size: 18px;
@@ -212,12 +236,13 @@ export default {
   border: 2px solid rgb(109, 120, 118);
   border-radius: 20px;
   cursor: pointer;
+  display: flex;
 }
 
-.input button:hover {
+.button-input:hover {
   background-color: #80cee7;
 }
-.input button:active {
+.button-input:active {
   background-color: #00b7ff;
   box-shadow: 0 5px gray;
   transform: translateY(2px);
