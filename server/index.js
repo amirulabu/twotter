@@ -44,6 +44,9 @@ const resolvers = {
   },
   Mutation: {
     sendTweet(root, { from, message }, { pubsub }) {
+      if (message.length > 140) {
+        throw new Error(`Message too long`);
+      }
       const tweet = { id: tweets.length + 1, from, message, time: new Date() };
       tweets.push(tweet);
       pubsub.publish(TWEET_CHANGED_TOPIC, { tweet: tweet });

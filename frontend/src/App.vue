@@ -8,22 +8,14 @@
         <!-- <input type="text" placeholder="from" v-model="from" /> -->
         <span>
           anon username: {{ from }}
-          <span class="reroll" v-on:click.prevent="rerollUsername">
-            Change Username 🎲
-          </span>
+          <span
+            class="reroll"
+            v-on:click.prevent="rerollUsername"
+          >Change Username 🎲</span>
         </span>
 
-        <textarea
-          placeholder="message"
-          v-model="message"
-          id=""
-          cols="30"
-          rows="3"
-        >
-        </textarea>
-        <div class="button-area" v-if="loadingSubmit">
-          Submitting message, please wait...
-        </div>
+        <textarea placeholder="message" v-model="message" id cols="30" rows="3"></textarea>
+        <div class="button-area" v-if="loadingSubmit">Submitting message, please wait...</div>
         <div class="button-area" v-else>
           <span style="margin-right: 20px;">{{ message.length }}/140</span>
           <button class="button-input" v-on:click.prevent="submit">Send</button>
@@ -32,14 +24,11 @@
 
       <div v-for="tweet in tweetsSorted" :key="tweet.id">
         <div class="card">
-          <div
-            class="avatar"
-            v-bind:style="{ 'background-color': avatarColor(tweet.from) }"
-          ></div>
+          <div class="avatar" v-bind:style="{ 'background-color': avatarColor(tweet.from) }"></div>
           <div class="text">
-            <span class="from"> {{ tweet.from }} </span>
-            <span class="message"> {{ tweet.message }}</span>
-            <span class="time">{{ formatDate(tweet.time) }} </span>
+            <span class="from">{{ tweet.from }}</span>
+            <span class="message">{{ tweet.message }}</span>
+            <span class="time">{{ formatDate(tweet.time) }}</span>
           </div>
         </div>
       </div>
@@ -60,23 +49,23 @@ export default {
       message: "",
       from: "",
       username: "",
-      loadingSubmit: false,
+      loadingSubmit: false
     };
   },
   computed: {
     tweetsSorted() {
       const copyArr = this.tweets;
       return copyArr.sort((a, b) => b.id - a.id);
-    },
+    }
   },
   watch: {
-    username: function (val, oldVal) {
+    username: function(val, oldVal) {
       if (oldVal === "" && localStorage.getItem("from") === "") {
         console.log("oldVal", oldVal);
         localStorage.setItem("from", val);
         this.from = val;
       }
-    },
+    }
   },
   created() {
     this.colorHash = new ColorHash();
@@ -108,7 +97,7 @@ export default {
         hour: "numeric",
         minute: "numeric",
         second: "numeric",
-        hour12: true,
+        hour12: true
       }).format(new Date(parseInt(date)));
     },
     avatarColor(text) {
@@ -120,7 +109,7 @@ export default {
         const from = this.from;
         const message = this.message;
         if (this.message.length > 140) {
-          alert("Too long");
+          alert("Message too long");
           this.loadingSubmit = false;
           return;
         }
@@ -142,8 +131,8 @@ export default {
           // Parameters
           variables: {
             from: from,
-            message: message,
-          },
+            message: message
+          }
         });
         console.log(data);
         this.message = "";
@@ -152,7 +141,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
+    }
   },
   apollo: {
     // Simple query that will update the 'tweets' vue property
@@ -185,10 +174,10 @@ export default {
         `,
         result({ data }) {
           this.tweets.push(data.tweet);
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 };
 </script>
 
